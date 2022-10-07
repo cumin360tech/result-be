@@ -4,10 +4,13 @@ import express from 'express';
 const uri = "mongodb+srv://admin:result2022@results2022oct.ygamb21.mongodb.net/test";
 //const uri = "mongodb+srv://gowthami123:gowthami@cluster0.7vwrl4g.mongodb.net/?retryWrites=true&w=majority";
 import xlsxFile from 'read-excel-file/node';
+import cors from 'cors'
+
 
 const client = new MongoClient(uri, {});
 
 const app = express();
+app.use(cors())
 const PORT = 9000;
 
 app.use(express.json());
@@ -30,8 +33,8 @@ app.post('/publishResult', async (req, res) => {
             prop: 'REGISTER_NO',
             type: String
         },
-        'STUDEN_ NAME': {
-            prop: 'STUDEN_ NAME',
+        'STUDENT_NAME': {
+            prop: 'STUDENT_NAME',
             type: String
         },
         'SCHOOL_NAME': {
@@ -113,28 +116,28 @@ app.delete('/result', async (req, res) => {
 });
 
 app.get('/result', async (req, res) => {
-    const result = await db.collection('result').find({ 'REGISTER_NO': req.query.reg_no}).toArray();
+    const result = await db.collection('result').find({ 'REGISTER_NO': req.query.reg_no }).toArray();
     console.log(result)
 
     try {
-        if(result.length == 1){
+        if (result.length == 1) {
             res.send({
                 'status': 200,
                 'data': result[0]
             })
         }
-        if(result.length > 1){
+        if (result.length > 1) {
             res.send({
                 'status': 500,
                 'data': [],
-                'message':'Student with duplicated register no exists'
+                'message': 'Student with duplicated register no exists'
             })
         }
-        if(result.length == 0){
+        if (result.length == 0) {
             res.send({
                 'status': 404,
                 'data': [],
-                'message':'No result found'
+                'message': 'No result found'
             })
         }
     } catch (e) {
@@ -143,7 +146,7 @@ app.get('/result', async (req, res) => {
             'data': 'failed'
         })
     }
-    
+
 });
 
 // CALL A SERVER AND LISTEN

@@ -5,7 +5,8 @@ const uri = "mongodb+srv://admin:result2022@results2022oct.ygamb21.mongodb.net/t
 //const uri = "mongodb+srv://gowthami123:gowthami@cluster0.7vwrl4g.mongodb.net/?retryWrites=true&w=majority";
 import xlsxFile from 'read-excel-file/node';
 import cors from 'cors'
-
+import upload from './middlewares/fileUpload.js'
+import fs from 'fs'
 
 const client = new MongoClient(uri, {});
 
@@ -26,7 +27,7 @@ client.connect(err => {
 const db = client.db('test');
 client.close();
 
-app.post('/publishResult', async (req, res) => {
+app.post('/publishResult', upload, async (req, res) => {
     let result = '';
     const schema = {
         'REGISTER_NO': {
@@ -82,13 +83,12 @@ app.post('/publishResult', async (req, res) => {
             type: String
         }
     };
-
-    xlsxFile('./result.xlsx', { schema }).then((rows) => {
+    // console.log()
+    xlsxFile(req.file.path, { schema }).then((rows) => {
         console.log([...rows.rows])
-        // db.collection('result').drop()
-        // result = db.collection('result').insertMany([...rows.rows])
+        db.collection('result').drop()
+        result = db.collection('result').insertMany([...rows.rows])
     })
-    //const result1 = ''//await db.collection('food').insertMany([{...req.body},{...req.body},{...req.body}])
     res.send({
         'status': 200,
         'message': 'Result addded successfully',

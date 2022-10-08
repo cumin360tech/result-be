@@ -85,8 +85,8 @@ app.post('/publishResult', async (req, res) => {
 
     xlsxFile('./result.xlsx', { schema }).then((rows) => {
         console.log([...rows.rows])
-        db.collection('result').drop()
-        result = db.collection('result').insertMany([...rows.rows])
+        // db.collection('result').drop()
+        // result = db.collection('result').insertMany([...rows.rows])
     })
     //const result1 = ''//await db.collection('food').insertMany([{...req.body},{...req.body},{...req.body}])
     res.send({

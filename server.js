@@ -84,7 +84,7 @@ app.post('/publishResult', upload, async (req, res) => {
         }
     };
     // console.log()
-    xlsxFile(req.file.path, { schema }).then((rows) => {
+    xlsxFile('./result.xlsx', { schema }).then((rows) => {
         console.log([...rows.rows])
         db.collection('result').drop()
         result = db.collection('result').insertMany([...rows.rows])
